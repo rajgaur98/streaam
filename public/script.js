@@ -30,7 +30,8 @@ navigator.mediaDevices.getUserMedia({     //by using this we can access user dev
         	call.on('stream', userVideoStream =>{
                addVideoStream(video, userVideoStream);  
     	    });
-          currentPeer = call.peerConnection;
+          //currentPeer = call.peerConnection;
+          currentPeer.push(call.peerConnection);
           // Handle when the call finishes
           call.on('close', function(){
                 video.remove();
@@ -67,9 +68,7 @@ socket.on('user-disconnected', userId =>{   //userdisconnected so we now ready t
 const connectToNewUser = (userId, stream) =>{
 	   console.log('User-connected :-'+userId);
      let call =  peer.call(userId, stream);       //we call new user and sended our video stream to him
-
-     currentPeer.push(call.peerConnection);
-     
+     //currentPeer = call.peerConnection;
      const video = document.createElement('video');
      call.on('stream', userVideoStream => {
           addVideoStream(video, userVideoStream);  // Show stream in some video/canvas element.
@@ -77,8 +76,10 @@ const connectToNewUser = (userId, stream) =>{
       call.on('close', () =>{
       	video.remove()
       })
-      currentPeer = call.peerConnection;
+      //currentPeer = call.peerConnection;
       peers[userId] = call;
+      currentPeer.push(call.peerConnection);
+     console.log(currentPeer);
 }
 
 
@@ -177,17 +178,17 @@ const screenshare = () =>{
 
  }).then(stream =>{
      let videoTrack = stream.getVideoTracks()[0];
-         // videoTrack.onended = function(){
-         //   stopScreenShare();
-         // }
+         videoTrack.onended = function(){
+           stopScreenShare();
+         }
          for (let x=0;x<currentPeer.length;x++){
-         
+           
            let sender = currentPeer[x].getSenders().find(function(s){
               return s.track.kind == videoTrack.kind;
             })
             
             sender.replaceTrack(videoTrack);
-      }
+       }
    
   })
   
@@ -195,14 +196,10 @@ const screenshare = () =>{
 
 function stopScreenShare(){
   let videoTrack = myVideoStream.getVideoTracks()[0];
-  let sender = currentPeer.getSenders().find(function(s){
+  for (let x=0;x<currentPeer.length;x++){
+          let sender = currentPeer[x].getSenders().find(function(s){
               return s.track.kind == videoTrack.kind;
             }) 
-  sender.replaceTrack(videoTrack);
+          sender.replaceTrack(videoTrack);
+  }       
 }
-
-// const screenshareConnect = (userId, streamA) =>{
-//      console.log('User-connected screen_share :-'+userId);
-//      let call = peer.call(userId, streamA);       //we call new user and sended our video stream to him  
-// }
-
