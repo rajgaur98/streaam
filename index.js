@@ -42,14 +42,6 @@ io.on('connection', socket =>{
 			io.to(roomId).emit('createMessage',message);
 			
 		})
-
-  //       socket.on('screen_share', ()=>{
-  //       	socket.join(roomId);
-  //       	socket.to(roomId).broadcast.emit('user-screencast', userId);
-		// })
-
-
-	    //code to disconnect user using socket simple method ('disconnect')
 	    socket.on('disconnect', () =>{
 	    	socket.to(roomId).broadcast.emit('user-disconnected', userId)
 	    	socket.to(roomId).broadcast.emit('user-screencast-disconnected', userId)
@@ -59,10 +51,7 @@ io.on('connection', socket =>{
             socket.to(roomId).broadcast.emit('user-connected',data);
          });
 	})
-	socket.on('join_screenCast', (roomId, userId)=>{
-        	socket.join(roomId);
-        	socket.to(roomId).broadcast.emit('user-screencast', userId);
-		})
+	
 })
 
 server.listen(3000, () =>{
