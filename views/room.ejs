@@ -2,16 +2,18 @@
 <html>
 <head>
 	<title>Web Api for streaming</title>
-    <link rel="stylesheet" href="style.css">	
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">	
 </head>
-<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon"> 
+<link rel="shortcut icon" href="data:image/x-icon;" type="image/x-icon"> 
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 <script>
 	
 	const ROOM_ID = '<%= roomId %>';
 	console.log(ROOM_ID);	
 </script>
 
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/0.3.16/peer.min.js"></script> -->
 <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js" defer></script>
 <script  src="/socket.io/socket.io.js" defer></script>
 <script src="https://kit.fontawesome.com/62d14f866e.js" crossorigin="anonymous"></script>
@@ -61,13 +63,13 @@
         
         <div class="main__right">
              <div class="main__header">
-             	<h6>Chat</h6>
+             	<h6 style="padding: 15px 0;">Chat</h6>
 			 </div>
-			 <div class="main_chat_window">
+			 <div class="main__chat_window">
 				<ul class="messages">
 				</ul>
 			 </div>
-			  <div class="main_messages_container">
+			  <div class="main__messages_container">
 				<input id="chat_messages" type="text" placeholder="Type message here...">
 			  </div>
         </div>

@@ -2,7 +2,7 @@ const socket = io('/');  //socket connection
 const videoGrid = document.getElementById('video-grid');
 const myVideo = document.createElement('video');
 myVideo.muted = true;
-let peers = {}, peerss = {}, userIDtoRemove, currentPeer = [];
+let peers = {}, currentPeer = [];
 
 var peer = new Peer(undefined,{   //we undefine this because peer server create it's own user it
   //path: '/peerjs',
@@ -10,7 +10,7 @@ var peer = new Peer(undefined,{   //we undefine this because peer server create 
 	port: '3001'
 });
 
-let myVideoStream, ScreemStream, removingClass ;
+let myVideoStream ;
 navigator.mediaDevices.getUserMedia({     //by using this we can access user device media(audio, video) 
 	video: true,
 	audio: false
@@ -53,9 +53,8 @@ navigator.mediaDevices.getUserMedia({     //by using this we can access user dev
 
 //if someone try to join room
 peer.on('open', async id =>{
-   await socket.emit('join-room', ROOM_ID, id); //if someone join room send roomid and userid to server
-   // socket.emit('screen_share', ROOM_ID, id); //if someone join room send roomid and userid to server
-   await socket.emit('join_screenCast', ROOM_ID, id);
+   await socket.emit('join-room', ROOM_ID, id);
+  
 })
 
 socket.on('user-disconnected', userId =>{   //userdisconnected so we now ready to stopshare 
@@ -79,7 +78,7 @@ const connectToNewUser = (userId, stream) =>{
       //currentPeer = call.peerConnection;
       peers[userId] = call;
       currentPeer.push(call.peerConnection);
-     console.log(currentPeer);
+      console.log(currentPeer);
 }
 
 
@@ -163,10 +162,28 @@ const share =() =>{
   alert('Copied');
  }
 
+ //msg sen from user
+let text = $('input');
 
+$('html').keydown((e) =>{
+  if(e.which == 13 && text.val().length !== 0){
+    console.log(text.val());
+    socket.emit('message', text.val());
+    text.val('')
+  }
+});
 
+//Print msg in room
+socket.on('createMessage', (msg, user) =>{
+  $('ul').append(`<li class= "message"><small>${user}</small><br>${msg}</li>`);
+  scrollToBottom();
+});
+
+const scrollToBottom = () =>{
+  var d = $('.main__chat_window');
+  d.scrollTop(d.prop("scrollHeight"));
+}
 const screenshare = () =>{
-  // if (check) {
  navigator.mediaDevices.getDisplayMedia({ 
      video:{
        cursor:'always'

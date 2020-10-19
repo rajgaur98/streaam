@@ -26,9 +26,6 @@ video{
 	flex-direction: column;
 	
 }
-.main__right{
-	flex:0.2;
-}
 
 .main__videos{
 	flex-grow: 1;
@@ -68,26 +65,34 @@ video{
 .main__controls__button i{
 	font-size: 24px;
 }
+
+.main__right{
+flex: 0.2;
+display: flex;
+flex-direction: column;
+background-color: #242324;
+border-left: 1px solid #3D3D42;
+}
 .main__header
 {
     color: #F5F5F5;
-    text-align: center;
+    text-align: CENTER;
 }
 
 
-.main_chat_window
+.main__chat_window
 {
     flex-grow: 1;
-    overflow-y: scroll;
+    overflow-y: scroll; 
 
 }
-.main_messages_container
+.main__messages_container
 {
-    padding:  22px 12px;
-    display: flex;
+   padding: 23px 12px;
+   display: flex;
 
 }
-.main_messages_container input {
+.main__messages_container input {
     flex-grow: 1;
     background-color: transparent;
     border: none;

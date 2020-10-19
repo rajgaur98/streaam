@@ -39,7 +39,7 @@ io.on('connection', socket =>{
 		
 		//code to massage in roomId
 		socket.on('message', message =>{
-			io.to(roomId).emit('createMessage',message);
+			io.to(roomId).emit('createMessage',message,userId);
 			
 		})
 	    socket.on('disconnect', () =>{
