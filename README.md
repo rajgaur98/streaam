@@ -3,7 +3,8 @@
 requirements:
  1. node.js,
  2. peerjs, 
- 3. socket.io
+ 3. socket.io,
+ 4. ejs
 
 language i use to buid:
  1. html
