@@ -13,6 +13,21 @@
 	const ROOM_ID = '<%= roomId %>';
 	console.log(ROOM_ID);	
 </script>
+<script>
+
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+</script>
 
 <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js" defer></script>
 <script  src="/socket.io/socket.io.js" defer></script>
@@ -37,18 +52,29 @@
 	        			<span>Stop Video</span>
 	        		</div>
 	        	</div>	
-	        	<div onclick="screenshare()" class="main__controls__block">
-	        		<div class="main__controls__button">
+	        	<div  class="main__controls__block">
+	        		<div onclick="screenshare()" class="main__controls__button">
 	        			<i class="fas fa-photo-video"></i>
 	        			<span>ScreenShare</span>
 	        		</div>
 	        		<div class="main__controls__button">
-	        			<i class="fas fa-user-friends"></i>
-	        			<span>Participants</span>
+	        			<!-- remove -->
+	        			<div class="dropdown">
+	        				<i onclick="getUsers()" class="fas fa-user-friends dropbtn"></i>
+	        			    <!-- <span>Participants</span> -->
+				  			<div id="myDropdown" class="dropdown-content">
+				  			<!-- ADD NEW <a> TAGS -->
+				  			</div>
+						</div>
+						<span>Participants</span>
 	        		</div>
 	        		<div onclick="share()" class="main__controls__button">
 	        			<i class="fa fa-share-alt"></i>
 	        			<span>Share</span>
+	        		</div>
+	        		<div onclick="raisedHand()" class="main__controls__button raisedHand">
+	        			<i class="far fa-hand-paper"></i>
+	        			<span>Hand</span>
 	        		</div>
 	        	</div>
 	        	<div class="main__controls__block">	

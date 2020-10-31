@@ -3,7 +3,7 @@ const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const { v4: uuidV4 } = require('uuid');
-
+const userS = [], userI = [];
 // const ExpressPeerServer = require('peer').ExpressPeerServer;
 // const peerServer = ExpressPeerServer(server, {
 //   debug: true
@@ -32,24 +32,45 @@ app.get('/:room', (req, res) =>{
 io.on('connection', socket =>{
 	//code to disconnect user using socket simple method ('join-room')
 	socket.on('join-room',(roomId, userId) =>{
+	
+		userS.push(socket.id);
+		userI.push(userId);
+		//console.log("room Id:- " + roomId,"userId:- "+ userId);    //userId mean new user 
 		
+		//join Room
 		console.log("room Id:- " + roomId,"userId:- "+ userId);    //userId mean new user 
 		socket.join(roomId);                                       //join this new user to room
 		socket.to(roomId).broadcast.emit('user-connected',userId); //for that we use this and emit to cliet	
 		
+		//Remove User
+	    socket.on('removeUser', (sUser, rUser)=>{
+	    	var i = userS.indexOf(rUser);
+	    	if(sUser == userI[0]){
+	    	  console.log("SuperUser Removed"+rUser);
+	    	  socket.to(roomId).broadcast.emit('remove-User', rUser);
+	    	}
+	    });
+
 		//code to massage in roomId
-		socket.on('message', message =>{
-			io.to(roomId).emit('createMessage',message,userId);
+		socket.on('message', (message,yourName) =>{
+			io.to(roomId).emit('createMessage',message,yourName);
 			
 		})
+
 	    socket.on('disconnect', () =>{
-	    	socket.to(roomId).broadcast.emit('user-disconnected', userId)
-	    	socket.to(roomId).broadcast.emit('user-screencast-disconnected', userId)
-	    })   
-        socket.on('myScreenShareEvent', function (data) {
-        	console.log(data);
-            socket.to(roomId).broadcast.emit('user-connected',data);
-         });
+	    	//userS.filter(item => item !== userId);
+	    	var i = userS.indexOf(socket.id);
+	    	userS.splice(i, 1);
+            socket.to(roomId).broadcast.emit('user-disconnected', userI[i]);
+            //update array
+           
+            userI.splice(i, 1);
+	    });
+	    socket.on('seruI', () =>{
+	    	socket.emit('all_users_inRoom', userI);
+			//console.log(userS);
+		    console.log(userI);
+	    });  
 	})
 	
 })

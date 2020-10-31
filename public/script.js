@@ -1,8 +1,15 @@
 const socket = io('/');  //socket connection
 const videoGrid = document.getElementById('video-grid');
+const userDropDown = document.getElementById('myDropdown');
 const myVideo = document.createElement('video');
 myVideo.muted = true;
 let peers = {}, currentPeer = [];
+let userlist= [];
+let cUser;
+
+let YourName = prompt('Type Your Name');
+// let bar = confirm('Confirm or deny');
+console.log(YourName);
 
 var peer = new Peer(undefined,{   //we undefine this because peer server create it's own user it
   //path: '/peerjs',
@@ -53,6 +60,7 @@ navigator.mediaDevices.getUserMedia({     //by using this we can access user dev
 
 //if someone try to join room
 peer.on('open', async id =>{
+   cUser = id; 
    await socket.emit('join-room', ROOM_ID, id);
   
 })
@@ -161,21 +169,20 @@ const share =() =>{
   document.body.removeChild(share);
   alert('Copied');
  }
-
  //msg sen from user
 let text = $('input');
 
 $('html').keydown((e) =>{
   if(e.which == 13 && text.val().length !== 0){
     console.log(text.val());
-    socket.emit('message', text.val());
+    socket.emit('message', text.val(),YourName);
     text.val('')
   }
 });
 
 //Print msg in room
 socket.on('createMessage', (msg, user) =>{
-  $('ul').append(`<li class= "message"><small>${user}</small><br>${msg}</li>`);
+  $('ul').append(`<li class= "message"><small>~${user}</small><br>${msg}</li>`);
   scrollToBottom();
 });
 
@@ -183,6 +190,8 @@ const scrollToBottom = () =>{
   var d = $('.main__chat_window');
   d.scrollTop(d.prop("scrollHeight"));
 }
+
+//screenShare
 const screenshare = () =>{
  navigator.mediaDevices.getDisplayMedia({ 
      video:{
@@ -220,3 +229,72 @@ function stopScreenShare(){
           sender.replaceTrack(videoTrack);
   }       
 }
+
+//raised hand
+const raisedHand = ()=>{
+  const sysbol = "&#9995;";
+  socket.emit('message', sysbol, YourName);
+  unChangeHandLogo();
+}
+
+const unChangeHandLogo = ()=>{
+  const html = `<i class="far fa-hand-paper" style="color:red;"></i>
+                <span>Raised</span>`;
+  document.querySelector('.raisedHand').innerHTML = html;
+  console.log("chnage")
+  changeHandLogo();
+}
+
+const changeHandLogo = ()=>{
+  setInterval(function(){
+    const html = `<i class="far fa-hand-paper" style="color:"white"></i>
+                <span>Hand</span>`;
+    document.querySelector('.raisedHand').innerHTML = html;
+  },3000);
+}
+
+//kick option
+socket.on('remove-User', (userId) =>{ 
+  if (cUser == userId) {
+    disconnectNow();
+  }
+});
+
+const getUsers = ()=>{ 
+  socket.emit('seruI',); 
+ 
+}
+
+const listOfUser = ()=>{
+  //userDropDown.innerHTML = '';
+  while (userDropDown.firstChild) {
+    userDropDown.removeChild(userDropDown.lastChild);
+  }
+  for (var i = 0; i < userlist.length; i++) {
+    var x = document.createElement("a");
+    var t = document.createTextNode(`VideoSector ${i+1}`); 
+    x.appendChild(t);
+    userDropDown.append(x);
+  }
+  const anchors = document.querySelectorAll('a');
+  for (let i = 0; i < anchors.length; i++) {
+    anchors[i].addEventListener('click', () => {
+        console.log(`Link is clicked ${i}`);
+        anchoreUser(userlist[i]);
+    });
+  }
+} 
+
+const anchoreUser = (userR)=>{
+  socket.emit('removeUser', cUser, userR);
+}
+
+
+socket.on('all_users_inRoom', (userI) =>{ 
+      console.log(userI);
+      userlist.splice(0,userlist.length);
+      userlist.push.apply(userlist ,userI);
+      console.log(userlist);
+      listOfUser();
+      document.getElementById("myDropdown").classList.toggle("show");
+});
