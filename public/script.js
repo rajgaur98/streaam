@@ -25,6 +25,7 @@ navigator.mediaDevices
     //in this promice we sended media in stream
     addVideoStream(myVideo, stream);
     myVideoStream = stream;
+    peer.emit("call", myVideoStream);
 
     peer.on("call", (call) => {
       //here user system answer call and send there video stream to us
