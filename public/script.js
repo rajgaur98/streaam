@@ -12,12 +12,7 @@ let YourName = prompt("Type Your Name");
 // let bar = confirm('Confirm or deny');
 console.log(YourName);
 
-var peer = new Peer({
-  //we undefine this because peer server create it's own user it
-  // path: '/peerjs',
-  host: "streaam.herokuapp.com",
-  secure: true,
-});
+var peer = new Peer();
 
 let myVideoStream;
 navigator.mediaDevices
