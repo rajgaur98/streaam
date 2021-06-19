@@ -15,9 +15,8 @@ console.log(YourName);
 var peer = new Peer({
   //we undefine this because peer server create it's own user it
   // path: '/peerjs',
-  host: "streaam.herokuapp.com/",
+  host: "streaam.herokuapp.com",
   secure: true,
-  port: "443",
 });
 
 let myVideoStream;
